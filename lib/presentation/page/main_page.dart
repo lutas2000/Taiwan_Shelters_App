@@ -13,13 +13,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _mapController = MapController(
+    // not work?
     initPosition: GeoPoint(latitude: 23.4747371, longitude: 117.840672),
   );
+  PersistentBottomSheetController? bottomSheetController;
 
   @override
   void initState() {
     super.initState();
-    // _mapController.on
   }
 
   @override
@@ -31,16 +32,21 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await _mapController.currentLocation();
+          // await _mapController.changeLocation(
+          //     GeoPoint(latitude: 25.0498347, longitude: 121.51838009999997));
+          // _mapController.setZoom(zoomLevel: 14);
         },
         backgroundColor: Colors.white,
-        child: const Icon(Icons.my_location, color: Colors.blueAccent,),
+        child: const Icon(
+          Icons.my_location,
+          color: Colors.blueAccent,
+        ),
       ),
       body: Stack(
         children: [
           OsmMap(mapController: _mapController),
         ],
-      )
+      ),
     );
   }
 }
-
