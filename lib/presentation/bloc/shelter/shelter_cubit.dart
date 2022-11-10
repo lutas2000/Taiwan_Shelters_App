@@ -5,7 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:taiwan_shelters/domain/model/shelter.dart';
 
-import '../../repository/shelter_repository.dart';
+import '../../../repository/shelter_repository.dart';
 
 part 'shelter_cubit.freezed.dart';
 part 'shelter_state.dart';
