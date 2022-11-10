@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:taiwan_shelters/domain/model/shelter.dart';
+import 'package:taiwan_shelters/presentation/bloc/map_page/map_page_cubit.dart';
 
 class ShelterMarker {
   final Shelter shelter;
@@ -23,8 +25,7 @@ class ShelterMarker {
             ),
           ),
           onTap: () {
-            debugPrint('Marker tapped ${shelter.name}');
-            // TODO: show shelter detail
+            context.read<MapPageCubit>().selectShelter(shelter);
           },
         );
       },
