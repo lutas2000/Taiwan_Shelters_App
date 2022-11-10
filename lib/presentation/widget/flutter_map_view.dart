@@ -42,7 +42,7 @@ class _FlutterMapViewState extends State<FlutterMapView> {
         zoom: 7,
         maxZoom: 19,
         onMapReady: () {
-          debugPrint('Map is ready');
+          _trackCurrentLocation();
         },
         // Stop centering the location marker on the map if user interacted with the map.
         onPositionChanged: (MapPosition position, bool hasGesture) {
@@ -55,19 +55,12 @@ class _FlutterMapViewState extends State<FlutterMapView> {
         },
       ),
       nonRotatedChildren: [
-        // AttributionWidget.defaultWidget(
-        //   source: 'OpenStreetMap contributors',
-        //   onSourceTapped: null,
-        // ),
         Positioned(
           right: 20,
           bottom: 20,
           child: FloatingActionButton(
             onPressed: () {
-              setState(
-                () => _centerOnLocationUpdate = CenterOnLocationUpdate.always,
-              );
-              _centerCurrentLocationStreamController.add(17);
+              _trackCurrentLocation();
               _getNearbyShelters();
             },
             child: const Icon(
@@ -88,6 +81,7 @@ class _FlutterMapViewState extends State<FlutterMapView> {
               _centerCurrentLocationStreamController.stream,
           centerOnLocationUpdate: _centerOnLocationUpdate,
         ),
+        // 因為 onTap 動作會被阻擋，所以放在最外層
         BlocBuilder<ShelterCubit, ShelterState>(builder: (context, state) {
           return MarkerLayer(
             markers: state.shelters
@@ -100,8 +94,15 @@ class _FlutterMapViewState extends State<FlutterMapView> {
     );
   }
 
+  void _trackCurrentLocation() {
+    setState(
+      () => _centerOnLocationUpdate = CenterOnLocationUpdate.always,
+    );
+    _centerCurrentLocationStreamController.add(17);
+  }
+
   void _getNearbyShelters() {
-    // TODO: 限制與上次 request 的時間間隔
+    // TODO: 限制與上次 distance 的間隔
     context.read<ShelterCubit>().getNearbyShelters(
           LatLng(
             _mapController.center.latitude,
