@@ -23,11 +23,17 @@ dependencies:
   latlong2: ^0.8.1
   flutter_map_location_marker: ^5.0.0+1
   geolocator: ^9.0.2
+  # Freezed
+  freezed: ^2.2.1
+  freezed_annotation: ^2.2.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+  build_runner: ^2.3.2
 
 flutter:
   uses-material-design: true
