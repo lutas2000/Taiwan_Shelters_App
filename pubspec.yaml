@@ -14,18 +14,26 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_osm_plugin: ^0.40.3
   flutter_bloc: ^8.1.1
   provider: ^6.0.4
+  get_it: ^7.2.0
+  equatable: ^2.0.5
+  # Flutter Map
   flutter_map: ^3.0.0
   latlong2: ^0.8.1
   flutter_map_location_marker: ^5.0.0+1
   geolocator: ^9.0.2
+  # Freezed
+  freezed: ^2.2.1
+  freezed_annotation: ^2.2.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+  build_runner: ^2.3.2
 
 flutter:
   uses-material-design: true

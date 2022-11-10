@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:taiwan_shelters/presentation/bloc/shelter_cubit.dart';
 
 import '../widget/flutter_map_view.dart';
 
@@ -12,42 +15,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _mapController = MapController(
-    // not work?
-    initPosition: GeoPoint(latitude: 23.4747371, longitude: 117.840672),
-  );
   PersistentBottomSheetController? bottomSheetController;
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      _requestLocationPermission();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     // await _mapController.currentLocation();
-      //     // await _mapController.changeLocation(
-      //     //     GeoPoint(latitude: 25.0498347, longitude: 121.51838009999997));
-      //     // _mapController.setZoom(zoomLevel: 14);
-      //   },
-      //   backgroundColor: Colors.white,
-      //   child: const Icon(
-      //     Icons.my_location,
-      //     color: Colors.blueAccent,
-      //   ),
-      // ),
-      body: Stack(
-        children: [
-          // OsmMap(mapController: _mapController),
-          FlutterMapView(),
-        ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => ShelterCubit(GetIt.I.get())),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Stack(
+          children: const [
+            FlutterMapView(),
+          ],
+        ),
       ),
     );
+  }
+
+  void _requestLocationPermission() async {
+    var status = await Permission.location.status;
+    if (status.isGranted) {
+      return;
+    }
+    status = await Permission.location.request();
+    if (!status.isGranted) {
+      const snackBar = SnackBar(
+        content: Text('無法取得 GPS 權限!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
