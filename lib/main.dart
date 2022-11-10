@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:taiwan_shelters/domain/data_source/shelter_data_source.dart';
+import 'package:taiwan_shelters/domain/fake/fake_shelter_data_source.dart';
+import 'package:taiwan_shelters/repository/shelter_repository.dart';
 
-import 'presentation/page/map_page.dart';
+import 'app.dart';
 
 void main() {
-  runApp(const MyApp());
+  _setupDi();
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void _setupDi() {
+  final getIt = GetIt.instance;
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '防空洞地圖',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  // Data sources
+  getIt.registerLazySingleton<ShelterDataSource>(() => FakeShelterDataSource());
+  // Repositories
+  getIt.registerLazySingleton<ShelterRepository>(
+      () => ShelterRepository(getIt.get()));
 }
