@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:taiwan_shelters/domain/model/shelter.dart';
 import 'package:taiwan_shelters/presentation/bloc/map_page/map_page_cubit.dart';
 import 'package:taiwan_shelters/presentation/bloc/shelter/shelter_cubit.dart';
+import 'package:taiwan_shelters/presentation/widget/shelter_detail.dart';
 
 import '../widget/flutter_map_view.dart';
 
@@ -31,29 +33,28 @@ class _MyHomePageState extends State<MyHomePage> {
   void _listenCubit() {
     _cubit.stream.listen((event) {
       event.maybeWhen(
-        showSnackBar: (msg) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text(msg),
-            ),
-          );
-        },
-        selectShelter: (shelter) {
-          showModalBottomSheet(
-            context: context,
-            // TODO: Shelter detail component
-            builder: (context) => Container(
-              child: Center(
-                child: Text(shelter.name),
-              ),
-            ),
-            // 清理狀態
-          ).whenComplete(() => _cubit.closeShelter());
-        },
+        showSnackBar: (msg) => _showSnackBar(msg),
+        selectShelter: (shelter) => _showShelterDetail(shelter),
         orElse: () {},
       );
     });
+  }
+
+  void _showSnackBar(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(msg),
+      ),
+    );
+  }
+
+  void _showShelterDetail(Shelter shelter) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => ShelterDetail(shelter: shelter),
+      // 清理狀態
+    ).whenComplete(() => _cubit.closeShelter());
   }
 
   @override
